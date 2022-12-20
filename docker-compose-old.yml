@@ -1,0 +1,193 @@
+version: '3.6'
+
+x-baseService: &baseService
+  networks:
+    - yaaas-api-network
+  restart: always
+
+services:
+  polygon.api:
+    <<: *baseService
+    container_name: polygon.api
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=development
+    environment:
+       POST: 3000
+       POSTGRES_HOST: polygon.database
+       IPFS_URI: http://localhost:3000/ipfs
+       POSTGRES_PORT: ${POSTGRES_PORT}
+       POSTGRES_USER: ${POSTGRES_USER}
+       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+       POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+       PROJECT_NAME: ${PROJECT_NAME}
+       PROJECT_DESCRIPTION: ${PROJECT_DESCRIPTION}
+       PROJECT_TAG: ${PROJECT_TAG}
+       PROJECT_VERSION: ${PROJECT_VERSION}
+       TWITTER_CONSUMER_KEY: ${TWITTER_CONSUMER_KEY}
+       TWITTER_CONSUMER_SECRET: ${TWITTER_CONSUMER_SECRET}
+       INSTAGRAM_CLIENT_ID: ${INSTAGRAM_CLIENT_ID}
+       INSTAGRAM_CLIENT_SECRET: ${INSTAGRAM_CLIENT_SECRET}
+       ADMIN_COLLECTION_ERC1155: ${ADMIN_COLLECTION_POLY_ERC1155}
+       FRONTEND_URL: ${FRONTEND_URL}
+       ALCHEMY_NETWORK: ${ALCHEMY_NETWORK_POLY}
+       ALCHEMY_API_KEY: ${ALCHEMY_API_KEY_POLY}
+       ALCHEMY_API_URL: ${ALCHEMY_API_URL_POLY}
+       CHALLENGE_ADDRESS_ERC1155: ${CHALLENGE_ADDRESS_POLY_ERC1155}
+    ports:
+      - 3002:3000
+    depends_on:
+      - polygon.database
+    links:
+      - polygon.database
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+
+  polygon.database:
+    <<: *baseService
+    container_name: polygon.database
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+     - polygon-db-data:/var/lib/postgresql/data
+
+  eth.api:
+    <<: *baseService
+    container_name: eth.api
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=development
+    environment:
+      POSTGRES_HOST: eth.database
+      IPFS_URI: http://localhost:3000/ipfs
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      PROJECT_NAME: ${PROJECT_NAME}
+      PROJECT_DESCRIPTION: ${PROJECT_DESCRIPTION}
+      PROJECT_TAG: ${PROJECT_TAG}
+      PROJECT_VERSION: ${PROJECT_VERSION}
+      TWITTER_CONSUMER_KEY: ${TWITTER_CONSUMER_KEY}
+      TWITTER_CONSUMER_SECRET: ${TWITTER_CONSUMER_SECRET}
+      INSTAGRAM_CLIENT_ID: ${INSTAGRAM_CLIENT_ID}
+      INSTAGRAM_CLIENT_SECRET: ${INSTAGRAM_CLIENT_SECRET}
+      ADMIN_COLLECTION_ERC1155: ${ADMIN_COLLECTION_ETH_ERC1155}
+      FRONTEND_URL: ${FRONTEND_URL}
+      ALCHEMY_NETWORK: ${ALCHEMY_NETWORK_ETH}
+      ALCHEMY_API_KEY: ${ALCHEMY_API_KEY_ETH}
+      ALCHEMY_API_URL: ${ALCHEMY_API_URL_ETH}
+      CHALLENGE_ADDRESS_ERC1155: ${CHALLENGE_ADDRESS_ETH_ERC1155}
+    ports:
+      - 3000:3000
+    depends_on:
+      - eth.database
+    links:
+      - eth.database
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+
+  eth.database:
+    <<: *baseService
+    container_name: eth.database
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - eth-db-data:/var/lib/postgresql/data
+  
+  binancetestnet.api:
+    <<: *baseService
+    container_name: binancetestnet.api
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=development
+    environment:
+      POST: 3000
+      POSTGRES_HOST: binancetestnet.database
+      IPFS_URI: http://localhost:3000/ipfs
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      PROJECT_NAME: ${PROJECT_NAME}
+      PROJECT_DESCRIPTION: ${PROJECT_DESCRIPTION}
+      PROJECT_TAG: ${PROJECT_TAG}
+      PROJECT_VERSION: ${PROJECT_VERSION}
+      TWITTER_CONSUMER_KEY: ${TWITTER_CONSUMER_KEY}
+      TWITTER_CONSUMER_SECRET: ${TWITTER_CONSUMER_SECRET}
+      INSTAGRAM_CLIENT_ID: ${INSTAGRAM_CLIENT_ID}
+      INSTAGRAM_CLIENT_SECRET: ${INSTAGRAM_CLIENT_SECRET}
+      ADMIN_COLLECTION_ERC1155: ${ADMIN_COLLECTION_BSC_ERC1155}
+      FRONTEND_URL: ${FRONTEND_URL}
+      ALCHEMY_NETWORK: ${AALCHEMY_NETWORK_BSC}
+      ALCHEMY_API_KEY: ${ALCHEMY_API_KEY_BSC}
+      ALCHEMY_API_URL: ${ALCHEMY_API_URL_BSC}
+      CHALLENGE_ADDRESS_ERC1155: ${CHALLENGE_ADDRESS_BSC_ERC1155}
+    ports:
+      - 3001:3000
+    depends_on:
+      - binancetestnet.database
+    links:
+      - binancetestnet.database
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+
+  binancetestnet.database:
+    <<: *baseService
+    container_name: binancetestnet.database
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - binancetestnet-db-data:/var/lib/postgresql/data
+
+  database.admin:
+    <<: *baseService
+    container_name: database.admin
+    image: dpage/pgadmin4
+    ports:
+      - "5050:5050"
+    environment:
+      PGADMIN_LISTEN_PORT: ${PGADMIN_LISTEN_PORT}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - eth.database
+      - binancetestnet.database
+      - polygon.database
+    links:
+      - eth.database
+      - binancetestnet.database
+      - polygon.database
+
+
+volumes:
+  polygon-db-data:
+  eth-db-data:
+  binancetestnet-db-data:
+
+networks:
+  yaaas-api-network:

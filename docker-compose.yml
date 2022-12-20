@@ -1,0 +1,94 @@
+version: '3.6'
+
+x-baseService: &baseService
+  networks:
+    - bullz-api-network
+  restart: always
+
+services:
+  bullz.api:
+    <<: *baseService
+    container_name: bullz.api
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=development
+    environment:
+      POSTGRES_HOST: bullz.database
+      IPFS_URI: http://localhost:3000/ipfs
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      PROJECT_NAME: ${PROJECT_NAME}
+      PROJECT_DESCRIPTION: ${PROJECT_DESCRIPTION}
+      PROJECT_TAG: ${PROJECT_TAG}
+      PROJECT_VERSION: ${PROJECT_VERSION}
+      TWITTER_CONSUMER_KEY: ${TWITTER_CONSUMER_KEY}
+      TWITTER_CONSUMER_SECRET: ${TWITTER_CONSUMER_SECRET}
+      INSTAGRAM_CLIENT_ID: ${INSTAGRAM_CLIENT_ID}
+      INSTAGRAM_CLIENT_SECRET: ${INSTAGRAM_CLIENT_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL}
+      ALCHEMY_NETWORK_ETH: ${ALCHEMY_NETWORK_ETH}
+      ALCHEMY_NETWORK_POLY: ${ALCHEMY_NETWORK_POLY}
+      ALCHEMY_API_KEY_ETH: ${ALCHEMY_API_KEY_ETH}
+      ALCHEMY_API_KEY_POLY: ${ALCHEMY_API_KEY_POLY}
+      ALCHEMY_API_URL_ETH: ${ALCHEMY_API_URL_ETH}
+      ALCHEMY_API_URL_POLY: ${ALCHEMY_API_URL_POLY}
+      CHALLENGE_ADDRESS_ETH_ERC1155: ${CHALLENGE_ADDRESS_ETH_ERC1155}
+      CHALLENGE_ADDRESS_BSC_ERC1155: ${CHALLENGE_ADDRESS_BSC_ERC1155}
+      CHALLENGE_ADDRESS_POLY_ERC1155: ${CHALLENGE_ADDRESS_POLY_ERC1155}
+      ADMIN_COLLECTION_AVAL_ERC1155: ${ADMIN_COLLECTION_AVAL_ERC1155}
+      ADMIN_COLLECTION_ETH_ERC1155: ${ADMIN_COLLECTION_ETH_ERC1155}
+      ADMIN_COLLECTION_BSC_ERC1155: ${ADMIN_COLLECTION_BSC_ERC1155}
+      ADMIN_COLLECTION_POLY_ERC1155: ${ADMIN_COLLECTION_POLY_ERC1155}
+      CHALLENGE_ADDRESS_AVAL_ERC1155: ${CHALLENGE_ADDRESS_AVAL_ERC1155}
+      CHAIN_ID_ETH: ${CHAIN_ID_ETH}
+      CHAIN_ID_BSC: ${CHAIN_ID_BSC}
+      CHAIN_ID_POLY: ${CHAIN_ID_POLY}
+      CHAIN_ID_AVAL: ${CHAIN_ID_AVAL}
+    ports:
+      - 3000:3000
+    depends_on:
+      - bullz.database
+    links:
+      - bullz.database
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+
+  bullz.database:
+    <<: *baseService
+    container_name: bullz.database
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - bullz-db-data:/var/lib/postgresql/data
+
+  database.admin:
+    <<: *baseService
+    container_name: database.admin
+    image: dpage/pgadmin4
+    ports:
+      - "5050:5050"
+    environment:
+      PGADMIN_LISTEN_PORT: ${PGADMIN_LISTEN_PORT}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - bullz.database      
+    links:
+      - bullz.database
+
+
+volumes:
+  bullz-db-data:
+
+networks:
+  bullz-api-network:
