@@ -34,12 +34,20 @@ export class Submit {
   status: string;
 
   @ApiProperty()
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column({ type: 'float', default: 0 })
+  checkingTime: number;
 
   @ApiProperty()
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @Column({ type: 'float', default: 0 })
+  airdropTime: number;
+
+  @ApiProperty()
+  @Column({ default: '' })
+  txHash: string;
+
+  @ApiProperty()
+  @Column({ default: '' })
+  failedMessage: string;
 
   @ManyToOne((type) => Challenge, (challenge) => challenge.submits, {
     onDelete: 'CASCADE',
@@ -48,4 +56,12 @@ export class Submit {
 
   @ManyToOne((type) => User, (user) => user.submits, { onDelete: 'CASCADE' })
   user: User;
+
+  @ApiProperty()
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @ApiProperty()
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

@@ -15,4 +15,16 @@ export class UpdateSubmitDTO {
 
   @ApiPropertyOptional()
   linkPreview: string;
+
+  @ApiProperty()
+  checkingTime: number;
+
+  @ApiProperty()
+  airdropTime: number;
+
+  @ApiProperty()
+  txHash: string;
+
+  @ApiProperty()
+  failedMessage: string;
 }

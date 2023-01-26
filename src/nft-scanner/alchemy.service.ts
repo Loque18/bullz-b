@@ -293,12 +293,24 @@ export class AlchemyService {
                 } else {
                   nftObj['name'] = nft.rawMetadata.name;
                   nftObj['file'] = nft.rawMetadata.file
-                    ? nft.rawMetadata.file
-                    : nft.rawMetadata.image;
+                    ? nft.rawMetadata.file.replace(
+                        'ipfs://',
+                        'https://ipfs.io/',
+                      )
+                    : nft.rawMetadata.image.replace(
+                        'ipfs://',
+                        'https://ipfs.io/',
+                      );
                   nftObj['description'] = nft.rawMetadata.description;
                   nftObj['cover'] = nft.rawMetadata.cover
-                    ? nft.rawMetadata.cover
-                    : nft.rawMetadata.image;
+                    ? nft.rawMetadata.cover.replace(
+                        'ipfs://',
+                        'https://ipfs.io/',
+                      )
+                    : nft.rawMetadata.image.replace(
+                        'ipfs://',
+                        'https://ipfs.io/',
+                      );
                   nftObj['externalLink'] = nft.rawMetadata.external_url
                     ? nft.rawMetadata.external_url
                     : '';
@@ -314,6 +326,8 @@ export class AlchemyService {
                     parseInt(nftUser.ownedNFTCount) + parseInt(nft.balance),
                 };
                 delete user['likes'];
+                delete user['challengeCreated'];
+                delete user['challengeSubmitted'];
                 await this.usersService.updateUser(user);
               }
             } else {
@@ -329,18 +343,26 @@ export class AlchemyService {
                     (existingNft.supply - parseInt(nft.balance)),
                 };
                 delete user['likes'];
+                delete user['challengeCreated'];
+                delete user['challengeSubmitted'];
                 await this.usersService.updateUser(user);
               }
 
               if (!nft.metadataError || nft.metadataError == undefined) {
                 existingNft['name'] = nft.rawMetadata.name;
                 existingNft['file'] = nft.rawMetadata.file
-                  ? nft.rawMetadata.file
-                  : nft.rawMetadata.image;
+                  ? nft.rawMetadata.file.replace('ipfs://', 'https://ipfs.io/')
+                  : nft.rawMetadata.image.replace(
+                      'ipfs://',
+                      'https://ipfs.io/',
+                    );
                 existingNft['description'] = nft.rawMetadata.description;
                 existingNft['cover'] = nft.rawMetadata.cover
-                  ? nft.rawMetadata.cover
-                  : nft.rawMetadata.image;
+                  ? nft.rawMetadata.cover.replace('ipfs://', 'https://ipfs.io/')
+                  : nft.rawMetadata.image.replace(
+                      'ipfs://',
+                      'https://ipfs.io/',
+                    );
                 existingNft['externalLink'] = nft.rawMetadata.external_url
                   ? nft.rawMetadata.external_url
                   : '';
@@ -387,12 +409,12 @@ export class AlchemyService {
 
       existingNft['name'] = meta.rawMetadata.name;
       existingNft['file'] = meta.rawMetadata.file
-        ? meta.rawMetadata.file
-        : meta.rawMetadata.image;
+        ? meta.rawMetadata.file.replace('ipfs://', 'https://ipfs.io/')
+        : meta.rawMetadata.image.replace('ipfs://', 'https://ipfs.io/');
       existingNft['description'] = meta.rawMetadata.description;
       existingNft['cover'] = meta.rawMetadata.cover
-        ? meta.rawMetadata.cover
-        : meta.rawMetadata.image;
+        ? meta.rawMetadata.cover.replace('ipfs://', 'https://ipfs.io/')
+        : meta.rawMetadata.image.replace('ipfs://', 'https://ipfs.io/');
       existingNft['externalLink'] = meta.rawMetadata.external_url
         ? meta.rawMetadata.external_url
         : '';

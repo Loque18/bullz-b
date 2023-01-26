@@ -106,11 +106,11 @@ export class SubmitsService {
     return this.submitsRepository.update(updateSubmitDTO.id, updateSubmitDTO);
   }
   addSubmit(submit: any): Promise<any> {
-    let challenge = new Challenge();
+    const challenge = new Challenge();
     challenge.id = submit.challenge_id;
     submit.challenge = challenge;
 
-    let user = new User();
+    const user = new User();
     user.id = submit.user_id;
     submit.user = user;
 
