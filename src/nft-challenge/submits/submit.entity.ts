@@ -5,11 +5,13 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Challenge } from '../challenges/challenge.entity';
 import { User } from 'src/users/users.entity';
 import { STATUS } from './submits.constants';
 import { ApiProperty } from '@nestjs/swagger';
+import { SubmitTask } from 'src/tasks/submit-tasks/submit-task.entity';
 
 @Entity()
 export class Submit {
@@ -18,11 +20,11 @@ export class Submit {
   id: number;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   link: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   linkPreview: string;
 
   @ApiProperty()
@@ -56,6 +58,9 @@ export class Submit {
 
   @ManyToOne((type) => User, (user) => user.submits, { onDelete: 'CASCADE' })
   user: User;
+
+  @OneToMany((type) => SubmitTask, (submit_task) => submit_task.submit)
+  submit_tasks: SubmitTask[];
 
   @ApiProperty()
   @CreateDateColumn()

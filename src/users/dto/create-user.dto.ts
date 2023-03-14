@@ -44,6 +44,12 @@ export class CreateUserDTO {
   readonly tiktok_url: string;
 
   @ApiProperty()
+  readonly discord_url: string;
+
+  @ApiProperty()
+  readonly telegram_url: string;
+
+  @ApiProperty()
   readonly portfolio_url: string;
 
   @ApiProperty()

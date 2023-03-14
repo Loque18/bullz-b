@@ -38,8 +38,13 @@ export class AlchemyService {
       apiKey: process.env.ALCHEMY_API_KEY_POLY,
       network: Network[process.env.ALCHEMY_NETWORK_POLY],
     };
+    const settingsArb = {
+      apiKey: process.env.ALCHEMY_API_KEY_ARB,
+      network: Network[process.env.ALCHEMY_NETWORK_ARB],
+    };
     const web3Eth = createAlchemyWeb3(process.env.ALCHEMY_API_URL_ETH);
     const web3Poly = createAlchemyWeb3(process.env.ALCHEMY_API_URL_POLY);
+    const web3Arb = createAlchemyWeb3(process.env.ALCHEMY_API_URL_ARB);
     this.services[process.env.CHAIN_ID_ETH] = {
       alchemy: new Alchemy(settingsEth),
       web3: web3Eth,
@@ -70,33 +75,42 @@ export class AlchemyService {
       challengeContract: null,
       fetchURL: null,
     };
+    this.services[process.env.CHAIN_ID_ARB] = {
+      alchemy: new Alchemy(settingsArb),
+      web3: web3Arb,
+      challengeContract: new web3Arb.eth.Contract(
+        ERC1155_CHALLANGE_ABI as AbiItem[],
+        process.env.CHALLENGE_ADDRESS_ARB_ERC1155,
+      ),
+      fetchURL: process.env.ALCHEMY_API_URL_ARB,
+    };
   }
 
-  async getTokens(): Promise<any> {
-    const result = await axios({
-      method: 'POST',
-      url:
-        'https://eth-goerli.alchemyapi.io/v2/iN-PGlLtC7flU86i-tx2WaGkp3Nz-J2_',
-      data: {
-        jsonrpc: '2.0',
-        method: 'alchemy_getTokenBalances',
-        params: ['0x5310369De4Cd907D2061c808c613dc3b8F5d6bd1', 'erc20'],
-        id: '42',
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        console.log(response.data);
-        return response.data;
-      })
-      .catch((err) => {
-        console.log(err.response);
-        return err;
-      });
-    return result;
-  }
+  // async getTokens(): Promise<any> {
+  //   const result = await axios({
+  //     method: 'POST',
+  //     url:
+  //       'https://eth-goerli.alchemyapi.io/v2/iN-PGlLtC7flU86i-tx2WaGkp3Nz-J2_',
+  //     data: {
+  //       jsonrpc: '2.0',
+  //       method: 'alchemy_getTokenBalances',
+  //       params: ['0x5310369De4Cd907D2061c808c613dc3b8F5d6bd1', 'erc20'],
+  //       id: '42',
+  //     },
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       return response.data;
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.response);
+  //       return err;
+  //     });
+  //   return result;
+  // }
 
   async searchTokens(ownerAddress, pageKey, nftScan, chain_id): Promise<any> {
     // return this.getTokens();
@@ -105,7 +119,7 @@ export class AlchemyService {
         const nftMetadata = await this.services[
           chain_id
         ].alchemy.core.getTokenBalances(ownerAddress);
-        console.log('nftMetadata', nftMetadata);
+        console.log('tokenMetadata', nftMetadata);
         for (let i = 0; i <= nftMetadata.tokenBalances.length; i++) {
           try {
             if (i == nftMetadata.tokenBalances.length) {

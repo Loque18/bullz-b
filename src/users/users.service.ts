@@ -245,7 +245,8 @@ export class UsersService {
   addUser(user): Promise<any> {
     return this.usersRepository.save(user);
   }
-  updateUser(updateUserDTO: UpdateUserDTO): Promise<any> {
+  updateUser(updateUserDTO): Promise<any> {
+    console.log(updateUserDTO);
     return this.usersRepository.update(updateUserDTO.id, updateUserDTO);
   }
 

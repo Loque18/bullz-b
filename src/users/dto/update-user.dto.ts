@@ -53,6 +53,12 @@ export class UpdateUserDTO {
   readonly tiktok_url: string;
 
   @ApiPropertyOptional()
+  readonly discord_url: string;
+
+  @ApiPropertyOptional()
+  readonly telegram_url: string;
+
+  @ApiPropertyOptional()
   readonly portfolio_url: string;
 
   @ApiPropertyOptional()

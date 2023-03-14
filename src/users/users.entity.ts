@@ -12,6 +12,8 @@ import { Like } from 'src/likes/like.entity';
 import { Submit } from 'src/nft-challenge/submits/submit.entity';
 import { Challenge } from 'src/nft-challenge/challenges/challenge.entity';
 import { Collection } from 'src/collection/collection.entity';
+import { ChallengeTask } from 'src/tasks/challenge-tasks/challenge-task.entity';
+import { SubmitTask } from 'src/tasks/submit-tasks/submit-task.entity';
 @Entity()
 @Unique(['address'])
 export class User {
@@ -76,6 +78,12 @@ export class User {
   @Column({ default: 'https://www.instagram.com/' })
   instagram_url: string;
 
+  @Column({ default: '' })
+  discord_url: string;
+
+  @Column({ default: '' })
+  telegram_url: string;
+
   @Column({ default: '', nullable: true })
   url: string;
 
@@ -105,6 +113,15 @@ export class User {
 
   @OneToMany((type) => Collection, (collection) => collection.user)
   collection: Collection[];
+
+  @OneToMany(
+    (type) => ChallengeTask,
+    (challenge_task) => challenge_task.creator,
+  )
+  challenge_tasks: ChallengeTask[];
+
+  @OneToMany((type) => SubmitTask, (submit_task) => submit_task.submitted_by)
+  submit_tasks: SubmitTask[];
 
   @CreateDateColumn()
   createdAt: Date;

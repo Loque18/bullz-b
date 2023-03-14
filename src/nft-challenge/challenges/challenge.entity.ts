@@ -15,6 +15,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CHALLENGE_STATUS } from './challenge.constant';
 import { Spotlight } from 'src/spotlight/spotlight.entity';
 import { Transaction } from 'src/transactions/transaction.entity';
+import { ChallengeTask } from 'src/tasks/challenge-tasks/challenge-task.entity';
 
 @Entity()
 export class Challenge {
@@ -158,6 +159,12 @@ export class Challenge {
 
   @OneToMany((type) => Transaction, (transaction) => transaction.challenge)
   transactions: Transaction[];
+
+  @OneToMany(
+    (type) => ChallengeTask,
+    (challenge_task) => challenge_task.challenge,
+  )
+  challenge_tasks: ChallengeTask[];
 
   @ApiProperty()
   @Column({ default: 0 })

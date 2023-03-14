@@ -25,8 +25,10 @@ import { TempStorageModule } from './tempStorage/tempStorage.module';
 import { TokensModule } from './tokens/tokens.module';
 import { TransactionsModule } from './transactions/transaction.module';
 import { ShareModule } from './shares/share.module';
-
-console.log('process.env.POSTGRES_HOST', process.env.POSTGRES_HOST);
+import { PhylloUsersModule } from './phylloUser/phylloUsers.module';
+import { Tasks } from './tasks/tasks.module';
+import { SocialAccountModule } from './socialAccounts/socialAccount.module';
+// console.log('process.env.POSTGRES_HOST', process.env.POSTGRES_HOST);
 
 @Module({
   imports: [
@@ -63,6 +65,9 @@ console.log('process.env.POSTGRES_HOST', process.env.POSTGRES_HOST);
     TokensModule,
     TransactionsModule,
     ShareModule,
+    PhylloUsersModule,
+    Tasks,
+    SocialAccountModule,
   ],
   controllers: [AppController],
   providers: [AppService, OauthService],

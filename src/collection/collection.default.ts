@@ -84,6 +84,26 @@ export class DefaultCollections {
         type: 'multiple',
         chain_id: process.env.CHAIN_ID_AVAL,
       },
+      {
+        address: process.env.ADMIN_COLLECTION_ARB_ERC1155.toLowerCase(),
+        coverImageType: 'image/png',
+        image:
+          'https://yaaas-test.s3-us-east-2.amazonaws.com/1656680571719logo_black.png',
+        name: 'BULLZ Collection',
+        symbol: 'BULLZ',
+        type: 'single',
+        chain_id: process.env.CHAIN_ID_ARB,
+      },
+      {
+        address: process.env.ADMIN_COLLECTION_ARB_ERC1155.toLowerCase(),
+        coverImageType: 'image/png',
+        image:
+          'https://yaaas-test.s3-us-east-2.amazonaws.com/1656680571719logo_black.png',
+        name: 'BULLZ Collection',
+        symbol: 'BULLZ',
+        type: 'multiple',
+        chain_id: process.env.CHAIN_ID_ARB,
+      },
     ];
   }
 }

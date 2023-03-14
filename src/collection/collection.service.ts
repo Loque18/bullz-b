@@ -35,33 +35,6 @@ export class CollectionService implements OnModuleInit {
           console.log(e);
         }
       }
-      // const collection1 = {
-      //   address: process.env.ADMIN_COLLECTION_ERC1155.toLowerCase(),
-      //   coverImageType: 'image/png',
-      //   image:
-      //     'https://yaaas-test.s3-us-east-2.amazonaws.com/1656680571719logo_black.png',
-      //   name: 'BULLZ Collection',
-      //   symbol: 'BULLZ',
-      //   type: 'single',
-      // };
-      // const collection2 = {
-      //   address: process.env.ADMIN_COLLECTION_ERC1155.toLowerCase(),
-      //   coverImageType: 'image/png',
-      //   image:
-      //     'https://yaaas-test.s3-us-east-2.amazonaws.com/1656680571719logo_black.png',
-      //   name: 'BULLZ Collection',
-      //   symbol: 'BULLZ',
-      //   type: 'multiple',
-      // };
-
-      // try {
-      //   const single = await this.addCollection(collection1);
-      //   console.log('single', single);
-      //   const multiple = await this.addCollection(collection2);
-      //   console.log('multiple', multiple);
-      // } catch (e) {
-      //   console.log(e);
-      // }
     }
   }
 
@@ -142,9 +115,9 @@ export class CollectionService implements OnModuleInit {
   ): Promise<PaginatedResultDto> {
     const skippedItems = (paginationDto.page - 1) * paginationDto.limit;
 
-    var count = await this.collectionRepository.count();
-    var totalCount = count;
-    var nfts = await this.collectionRepository
+    const count = await this.collectionRepository.count();
+    const totalCount = count;
+    const nfts = await this.collectionRepository
       .createQueryBuilder('Collection')
       .skip(skippedItems)
       .take(paginationDto.limit)

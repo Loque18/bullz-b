@@ -414,6 +414,8 @@ export class ChallengesService {
       .leftJoinAndSelect('Challenge.creator', 'creator')
       .leftJoinAndSelect('Challenge.nft', 'nft')
       .leftJoinAndSelect('Challenge.token', 'token')
+      .leftJoinAndSelect('Challenge.challenge_tasks', 'challenge_tasks')
+      .leftJoinAndSelect('challenge_tasks.task_template', 'task_template')
       .where('Challenge.id = :id', { id: id })
       .getOne();
   }
