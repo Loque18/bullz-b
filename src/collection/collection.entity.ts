@@ -5,10 +5,12 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  Unique,
 } from 'typeorm';
 import { User } from 'src/users/users.entity';
 import { ApiProperty } from '@nestjs/swagger';
 @Entity()
+@Unique(['address', 'type', 'chain_id'])
 export class Collection {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')

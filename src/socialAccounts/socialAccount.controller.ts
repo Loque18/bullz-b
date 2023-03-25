@@ -4,7 +4,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { SocialAccount } from './socilaAccount.entity';
 import { RegisterDiscordDTO } from './dto/register-discor.dto';
-import { VerifyJoinDTO } from './dto/verify-join.dto';
+import { BotConnectedDTO, VerifyJoinDTO } from './dto/verify-join.dto';
 import { UsersService } from 'src/users/users.service';
 import { SubmitTaskService } from 'src/tasks/submit-tasks/submit-task.service';
 import { RegisterTelegramDTO } from './dto/register-telegram.dto';
@@ -169,12 +169,12 @@ export class SocialAccountController {
       verifyTelegramJoinDTO.submit_task_id,
     );
 
-    console.log('submitTask', submitTask);
+    // console.log('submitTask', submitTask);
     const socialData = await this.socialAccountService.getUser(
       submitTask.submitted_by.id,
       'telegram',
     );
-    console.log('socialData', socialData);
+    // console.log('socialData', socialData);
     if (!socialData) {
       return { verified: false, message: 'user not connected to telegram' };
     }
@@ -200,6 +200,44 @@ export class SocialAccountController {
     } catch (error) {
       console.log('error', error);
       return { verified: false, message: error.message };
+    }
+  }
+
+  @ApiCreatedResponse({
+    description: 'Returs the status of the bot',
+    type: Object,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Post('/check-bot-connected')
+  async isBotConnected(@Body() botConnectedDTO: BotConnectedDTO) {
+    try {
+      console.log('botConnectedDTO', botConnectedDTO);
+
+      const botData = await this.socialAccountService.getBotInfo();
+      console.log('botData', botData);
+
+      const parts = botConnectedDTO.url.split('/');
+      const chat_id = '@' + parts[parts.length - 1];
+
+      const chatMember = await this.socialAccountService.getChatMember(
+        botData.result.id,
+        chat_id,
+      );
+      console.log('chatMember', chatMember);
+      if (chatMember.status == 'administrator') {
+        return {
+          isBotConnected: true,
+          message: 'bot is connected to chat_id',
+        };
+      } else {
+        return {
+          isBotConnected: false,
+          message: 'Bot is not added in the channel.',
+        };
+      }
+    } catch (error) {
+      console.log('error', error);
+      return { isBotConnected: false, message: error.message };
     }
   }
 }

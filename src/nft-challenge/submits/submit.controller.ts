@@ -28,6 +28,7 @@ import {
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Submit } from './submit.entity';
 import { SubmitsModule } from './submit.module';
+import { UpdateBulkSubmitDTO } from './dto/update-bulk-submit.dto';
 
 class DeleteSubmit {
   @ApiProperty()
@@ -137,6 +138,37 @@ export class SubmitsController {
   @Put()
   async update(@Body() updateSubmitDTO: UpdateSubmitDTO) {
     const submit = await this.submitsService.updateSubmit(updateSubmitDTO);
+    return submit;
+  }
+
+  @ApiBody({
+    description: 'updateBulkSubmitDTO',
+    type: UpdateBulkSubmitDTO,
+  })
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: 'The record has been successfully update.',
+    type: UpdateResult,
+  })
+  @Put('/update-bulk')
+  async updateBulk(@Body() updateBulkSubmitDTO: UpdateBulkSubmitDTO) {
+    const submit = await this.submitsService.updateBulkSubmit(
+      updateBulkSubmitDTO,
+    );
+    return submit;
+  }
+
+  @ApiBody({
+    description: 'update submissions by hash',
+  })
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: 'The record has been successfully update.',
+    type: UpdateResult,
+  })
+  @Put('/update-by-hash')
+  async updateByHash(@Body() submitData) {
+    const submit = await this.submitsService.updateByHash(submitData);
     return submit;
   }
 

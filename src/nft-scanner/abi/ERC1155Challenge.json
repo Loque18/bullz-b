@@ -5,6 +5,11 @@
         "internalType": "address",
         "name": "token",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "primaryToken",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -53,6 +58,12 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "airdropEndAt",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "airdropFee",
         "type": "uint256"
       },
       {
@@ -113,7 +124,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "tokenAirdropFee",
+        "name": "airdropFee",
         "type": "uint256"
       },
       {
@@ -148,12 +159,6 @@
         "type": "uint256"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "airdropFee",
-        "type": "uint256"
-      },
-      {
         "indexed": true,
         "internalType": "uint256",
         "name": "eventIdAirDropChallenge",
@@ -185,9 +190,34 @@
         "type": "uint256"
       },
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "eventIdAirDropTokenChallenge",
+        "type": "uint256"
+      }
+    ],
+    "name": "AirDropTokenChallenge",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "challengeId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "recipients",
+        "type": "address[]"
+      },
+      {
         "indexed": false,
         "internalType": "uint256",
-        "name": "airdropFee",
+        "name": "tokenAmount",
         "type": "uint256"
       },
       {
@@ -197,7 +227,7 @@
         "type": "uint256"
       }
     ],
-    "name": "AirDropTokenChallenge",
+    "name": "BulkAirDropTokenChallenge",
     "type": "event"
   },
   {
@@ -229,6 +259,37 @@
       }
     ],
     "name": "BulkAirdrop",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "challengeId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "recipients",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "amounts",
+        "type": "uint256[]"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "eventIdAirDropChallenge",
+        "type": "uint256"
+      }
+    ],
+    "name": "BulkAirdropNFTChallenge",
     "type": "event"
   },
   {
@@ -520,6 +581,69 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "challengeId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address[]",
+        "name": "recipients",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "amounts",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "eventIdAirDropChallenge",
+        "type": "uint256"
+      }
+    ],
+    "name": "bulkAirdropChallenge",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "challengeId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address[]",
+        "name": "recipients",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "eventIdAirDropTokenChallenge",
+        "type": "uint256"
+      }
+    ],
+    "name": "bulkAirdropTokenChallenge",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

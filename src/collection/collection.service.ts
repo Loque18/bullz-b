@@ -22,20 +22,15 @@ export class CollectionService implements OnModuleInit {
 
   async onModuleInit() {
     const collectionCount = await this.getCollectionCount();
-
     console.log('collectionCount', collectionCount);
-
-    if (collectionCount == 0) {
-      const collections = this.defaultCollections.getCollections();
-      for (let i = 0; i < collections.length; i++) {
-        try {
-          const collection = await this.addCollection(collections[i]);
-          console.log('single', collection);
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    }
+    const collections = this.defaultCollections.getCollections();
+    await this.collectionRepository
+      .createQueryBuilder()
+      .insert()
+      .into(Collection)
+      .values(collections)
+      .orIgnore()
+      .execute();
   }
 
   getCollectionCount(): Promise<any> {
@@ -175,10 +170,7 @@ export class CollectionService implements OnModuleInit {
   addCollection(collection): Promise<any> {
     return this.collectionRepository.save(collection);
   }
-  // addCollection(body,data): Promise<any> {
-  //     body.image = data;
-  //     return this.collectionRepository.save(body);
-  // }
+
   async getSearch(param): Promise<any> {
     const collection = await this.collectionRepository
       .createQueryBuilder('Collection')

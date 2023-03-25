@@ -174,4 +174,22 @@ export class SocialAccountService {
   async getChatMember(user_id, chat_id): Promise<any> {
     return this.bot.getChatMember(chat_id, user_id);
   }
+
+  async getBotInfo(): Promise<any> {
+    const result = await axios({
+      method: 'GET',
+      url: `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/getMe`,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((err) => {
+        console.log(err.response);
+        return err;
+      });
+    return result;
+  }
 }

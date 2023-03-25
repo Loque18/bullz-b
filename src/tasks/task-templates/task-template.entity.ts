@@ -5,11 +5,13 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  Unique,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { ChallengeTask } from '../challenge-tasks/challenge-task.entity';
 
 @Entity()
+@Unique(['identifier'])
 export class TaskTemplate {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')

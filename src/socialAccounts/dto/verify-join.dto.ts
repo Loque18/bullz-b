@@ -7,3 +7,8 @@ export class VerifyJoinDTO {
   @ApiProperty()
   submit_task_id: string;
 }
+
+export class BotConnectedDTO {
+  @ApiProperty()
+  url: string;
+}

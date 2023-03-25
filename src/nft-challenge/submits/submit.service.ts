@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Submit } from './submit.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Brackets } from 'typeorm';
+import { Repository, Brackets, In } from 'typeorm';
 import { UpdateSubmitDTO } from './dto/update-submit.dto';
 import { CreateSubmitDTO } from './dto/create-submit.dto';
 
@@ -10,6 +10,7 @@ import { User } from 'src/users/users.entity';
 
 import { PaginationDto } from './dto/pagination.dto';
 import { PaginatedResultDto } from './dto/result.dto';
+import { UpdateBulkSubmitDTO } from './dto/update-bulk-submit.dto';
 
 @Injectable()
 export class SubmitsService {
@@ -111,6 +112,39 @@ export class SubmitsService {
   updateSubmit(updateSubmitDTO: UpdateSubmitDTO): Promise<any> {
     return this.submitsRepository.update(updateSubmitDTO.id, updateSubmitDTO);
   }
+
+  updateBulkSubmit(updateBulkSubmitDTO: UpdateBulkSubmitDTO): Promise<any> {
+    const obj = {};
+    if (updateBulkSubmitDTO.txHash) obj['txHash'] = updateBulkSubmitDTO.txHash;
+    if (updateBulkSubmitDTO.failedMessage)
+      obj['failedMessage'] = updateBulkSubmitDTO.failedMessage;
+    if (updateBulkSubmitDTO.status) obj['status'] = updateBulkSubmitDTO.status;
+    if (updateBulkSubmitDTO.checkingTime)
+      obj['checkingTime'] = updateBulkSubmitDTO.checkingTime;
+    if (updateBulkSubmitDTO.airdropTime)
+      obj['airdropTime'] = updateBulkSubmitDTO.airdropTime;
+    return this.submitsRepository
+      .createQueryBuilder('Submit')
+      .update(Submit)
+      .set(obj)
+      .where({ id: In(updateBulkSubmitDTO.idList) })
+      .execute();
+  }
+
+  updateByHash(submit): Promise<any> {
+    const obj = {};
+    if (submit.failedMessage) obj['failedMessage'] = submit.failedMessage;
+    if (submit.status) obj['status'] = submit.status;
+    if (submit.checkingTime) obj['checkingTime'] = submit.checkingTime;
+    if (submit.airdropTime) obj['airdropTime'] = submit.airdropTime;
+    return this.submitsRepository
+      .createQueryBuilder('Submit')
+      .update(Submit)
+      .set(obj)
+      .where({ txHash: submit.txHash })
+      .execute();
+  }
+
   addSubmit(submit: any): Promise<any> {
     const challenge = new Challenge();
     challenge.id = submit.challenge_id;
